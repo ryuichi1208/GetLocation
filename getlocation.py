@@ -34,6 +34,9 @@ Please enter a number between 1 and 100.
 
 
 def debug_info_deco(func):
+    """
+    Decorator that displays arguments when calling functions during debugging.
+    """
     class pycolor:
         YELLOW = '\033[33m'
         BLUE = '\033[34m'
