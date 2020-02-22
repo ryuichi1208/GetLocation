@@ -14,8 +14,9 @@ from collections import defaultdict, deque
 from functools import lru_cache
 from typing import List, Dict
 
-DEBUG = os.environ.get('LOCATION_DEBUG', 'False')
+DEBUG = os.environ.get("LOCATION_DEBUG", "False")
 LOCATION_API_URL = "https://ipapi.co"
+
 
 def usage():
     msg = """
@@ -37,19 +38,23 @@ def debug_info_deco(func):
     """
     Decorator that displays arguments when calling functions during debugging.
     """
+
     class pycolor:
-        YELLOW = '\033[33m'
-        BLUE = '\033[34m'
-        PURPLE = '\033[35m'
-        END = '\033[0m'
+        YELLOW = "\033[33m"
+        BLUE = "\033[34m"
+        PURPLE = "\033[35m"
+        END = "\033[0m"
 
     def wrapper(*args, **kwargs):
         if DEBUG == True:
             now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-            print(pycolor.BLUE\
-                  + f"[DEBUG]: {now}, {func.__name__}, args: {args}"\
-                  + pycolor.END)
+            print(
+                pycolor.BLUE
+                + f"[DEBUG]: {now}, {func.__name__}, args: {args}"
+                + pycolor.END
+            )
         return func(*args, **kwargs)
+
     return wrapper
 
 
@@ -65,6 +70,16 @@ def check_args_validate(args: List[str]):
         return False, 0
 
     return True, int(args[1])
+
+
+def guess_filename(obj):
+    """
+    Tries to guess the filename of the given object.
+    """
+    basestring = None
+    name = getattr(obj, "name", None)
+    if name and isinstance(name, basestring) and name[0] != "<" and name[-1] != ">":
+        return os.path.basename(name)
 
 
 @debug_info_deco
@@ -102,16 +117,18 @@ def print_pretty_json(json_location: dict):
     """
     try:
         json_location = json.loads(json_location)
-        print(f"IP = {json_location['ip']} \
+        print(
+            f"IP = {json_location['ip']} \
               Country = {json_location['country']} \
-              City = {json_location['city']}")
+              City = {json_location['city']}"
+        )
     except KeyError:
         print("Bad result. I couldn't get country information from IP.")
     except TypeError:
         print("The information passed is corrupt. Try running with DEBUG enabled.")
 
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=8192, typed=True)
 def exec_requests(url: str):
     """
     API execution function.
@@ -120,6 +137,16 @@ def exec_requests(url: str):
     """
     headers = {"content-type": "application/json"}
     return requests.get(url, headers=headers, timeout=(3.0, 7.5))
+
+
+def dict_to_sequence(d):
+    """
+    Returns an internal sequence dictionary update.
+    """
+    if hasattr(d, "items"):
+        d = d.items()
+
+    return d
 
 
 def url_construction(ip_list: deque):
