@@ -27,3 +27,9 @@ class TestGetlocation(object):
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             getlocation.main(["args", "argv[0]", "argv[1]"])
         assert pytest_wrapped_e.type == SystemExit
+
+    def test_print_pretty_json(self):
+        assert getlocation.print_pretty_json({"aaa":"bbb"}) == None
+        assert getlocation.print_pretty_json({"aaa":"bbb"}) == None
+        assert getlocation.print_pretty_json({111:222}) == None
+        assert getlocation.print_pretty_json({111:"bbb"}) == None

@@ -100,10 +100,15 @@ def print_pretty_json(json_location: dict):
     """
     Format and display the passed json format data
     """
-    json_location = json.loads(json_location)
-    print(f"IP = {json_location['ip']} \
-          Country = {json_location['country']} \
-          City = {json_location['city']}")
+    try:
+        json_location = json.loads(json_location)
+        print(f"IP = {json_location['ip']} \
+              Country = {json_location['country']} \
+              City = {json_location['city']}")
+    except KeyError:
+        print("Bad result. I couldn't get country information from IP.")
+    except TypeError:
+        print("The information passed is corrupt. Try running with DEBUG enabled.")
 
 
 @lru_cache(maxsize=None)
