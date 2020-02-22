@@ -85,7 +85,11 @@ def is_valid_ip(ip_list: List[str]) -> deque:
     que = deque()
     for ip in ip_list:
         try:
-            que.append(ipaddress.ip_address(ip))
+            ip = ipaddress.ip_address(ip)
+            # Excluded from private address because it
+            # will be null at the time of inquiry
+            if not ip.is_private:
+                que.append(ip)
         except ValueError:
             continue
     return que if len(que) > 0 else False
