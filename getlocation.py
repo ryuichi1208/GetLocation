@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Script to identify country from IP address
+Useful if you want to identify a country.
+"""
+
 import datetime
 import ipaddress
 import json
@@ -8,14 +13,17 @@ import os
 import pprint
 import re
 import requests
+import socket
 import sys
 
 from collections import defaultdict, deque
 from functools import lru_cache
 from typing import List, Dict
 
-DEBUG = os.environ.get("LOCATION_DEBUG", "False")
 LOCATION_API_URL = "https://ipapi.co"
+
+DEBUG = os.environ.get("LOCATION_DEBUG", "False")
+ASYNC_FLG = os.environ.get("LOCATION_ASYNC_REQUESTS", "False")
 
 
 def usage():
@@ -29,6 +37,7 @@ Usage: python3 getlocation.py N
 Enter the number of the IP address you want to check in N.
 Do not enter more than one IP address per line.
 Please enter a number between 1 and 100.
+Private addresses do not execute the API.
     """
     print(msg)
     sys.exit(1)
@@ -56,6 +65,14 @@ def debug_info_deco(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+
+def lookup_ip_address():
+    """
+    Convert from domain to IP address.
+    """
+    ip = socket.inet_ntoa(struct.pack("!L", random.getrandbits(32)))
+    # record = reader.city(str(ip))
 
 
 @debug_info_deco
