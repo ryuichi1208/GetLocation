@@ -73,6 +73,7 @@ def lookup_ip_address():
     """
     ip = socket.inet_ntoa(struct.pack("!L", random.getrandbits(32)))
     # record = reader.city(str(ip))
+    return ip
 
 
 @debug_info_deco
@@ -105,7 +106,11 @@ def read_from_stdin(ip_nums: int) -> List[int]:
     Reads the specified number of lines from stdin.
     If more than the specified number is passed, the rest will be ignored.
     """
-    return [input() for i in range(ip_nums)]
+    try:
+        return [input() for i in range(ip_nums)]
+    except KeyboardInterrupt:
+        # If standard input is stopped in the middle, it returns an empty List.
+        return []
 
 
 @debug_info_deco
