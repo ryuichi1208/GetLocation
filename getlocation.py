@@ -43,16 +43,19 @@ Private addresses do not execute the API.
     sys.exit(1)
 
 
+class pycolor:
+    RED = "\033[31m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    PURPLE = "\033[35m"
+    CYAN = "\033[36m"
+    END = "\033[0m"
+
+
 def debug_info_deco(func):
     """
     Decorator that displays arguments when calling functions during debugging.
     """
-
-    class pycolor:
-        YELLOW = "\033[33m"
-        BLUE = "\033[34m"
-        PURPLE = "\033[35m"
-        END = "\033[0m"
 
     def wrapper(*args, **kwargs):
         if DEBUG == True:
@@ -139,11 +142,21 @@ def print_pretty_json(json_location: dict):
     """
     try:
         json_location = json.loads(json_location)
+        ip = json_location["ip"]
+        city = json_location["city"]
+        region = json_location["region"]
+        country = json_location["country"]
+        languages = json_location["languages"]
+
+        if country not in ["Ja", "Japan", "JP"]:
+            print(pycolor.RED, end="")
         print(
-            f"IP = {json_location['ip']} \
-              Country = {json_location['country']} \
-              City = {json_location['city']}"
+            f"IP:{ip}, city:{city}, region:{region}, country:{country}, languages:{languages}"
         )
+        print(pycolor.END, end="")
+
+        # else:
+        #     print()
     except KeyError:
         print("Bad result. I couldn't get country information from IP.")
     except TypeError:
