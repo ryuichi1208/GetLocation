@@ -171,7 +171,12 @@ def exec_requests(url: str):
     executed IP address is returned from the cache.
     """
     headers = {"content-type": "application/json"}
-    return requests.get(url, headers=headers, timeout=(3.0, 7.5))
+    res = requests.get(url, headers=headers, timeout=(3.0, 7.5))
+
+    if res.status_code != 200:
+        raise requests.exceptions.HTTPError
+    else:
+        return 0
 
 
 def dict_to_sequence(d):
@@ -190,6 +195,7 @@ def url_construction(ip_list: deque):
     Call the function to execute http request based on the generated URL.
     After the call, fetch the json data and call the display function.
     """
+    res = None
     for _ in range(len(ip_list)):
         url = f"{LOCATION_API_URL}/{ip_list.popleft()}/json"
         try:
@@ -199,7 +205,7 @@ def url_construction(ip_list: deque):
         except Exception as ex:
             print(ex)
 
-        print_pretty_json(json.dumps(res.json()))
+        if res: print_pretty_json(json.dumps(res.json()))
 
 
 def main(args):
