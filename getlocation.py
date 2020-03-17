@@ -58,7 +58,7 @@ def debug_info_deco(func):
     """
 
     def wrapper(*args, **kwargs):
-        if DEBUG == True:
+        if DEBUG is True:
             now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
             print(
                 pycolor.BLUE
