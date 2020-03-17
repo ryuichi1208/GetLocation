@@ -205,7 +205,8 @@ def url_construction(ip_list: deque):
         except Exception as ex:
             print(ex)
 
-        if res: print_pretty_json(json.dumps(res.json()))
+        if res:
+            print_pretty_json(json.dumps(res.json()))
 
 
 def main(args):
